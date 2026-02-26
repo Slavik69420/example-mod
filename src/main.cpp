@@ -1,5 +1,6 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayLayer.hpp>
+#include <Geode/loader/SettingEvent.hpp>
 
 using namespace geode::prelude;
 
@@ -7,7 +8,7 @@ class $modify(MyPlayLayer, PlayLayer) {
     bool init(GJGameLevel* level, bool useReplay, bool dontSave) {
         if (!PlayLayer::init(level, useReplay, dontSave)) return false;
 
-        // Button erstellen
+        // Button erstellen mit Cocos2d-Standardmethoden
         auto spr = ButtonSprite::create("AC", 0, false, "goldFont.fnt", "GJ_button_01.png", 30, 0.6f);
         auto btn = CCMenuItemSpriteExtra::create(
             spr, this, menu_selector(MyPlayLayer::toggleQoLAutoclicker)
@@ -15,31 +16,34 @@ class $modify(MyPlayLayer, PlayLayer) {
 
         auto menu = CCMenu::create();
         menu->addChild(btn);
-        menu->setPosition({50, 150}); // Position auf dem Bildschirm
+        
+        // Position: Unten links (X=30, Y=100)
+        menu->setPosition({30, 100}); 
         this->addChild(menu, 100);
 
         return true;
     }
 
-    void toggleQoLAutoclicker(CCObject*) {
-        // 1. Hole dir den QoLMod über seine ID
+    void toggleQoLAutoclicker(CCObject* sender) {
+        // Suche nach dem QoL Mod
         auto qolMod = Loader::get()->getLoadedMod("thesillydoggo.qolmod");
         
         if (qolMod) {
-            // 2. Suche die Einstellung für den Autoclicker
-            // Laut Source Code heißt der Key oft "level/autoclicker"
-            auto setting = qolMod->getSettingValue<bool>("level/autoclicker");
-            
-            // 3. Wert umkehren (Toggle)
-            qolMod->setSettingValue("level/autoclicker", !setting);
-            
-            // Optisches Feedback (optional)
-            Notification::create(
-                std::string("Autoclicker: ") + (!setting ? "AN" : "AUS"),
-                NotificationIcon::Info
-            )->show();
+            // Wir prüfen sicherheitshalber, ob die Einstellung existiert
+            if (qolMod->hasSetting("level/autoclicker")) {
+                bool currentVal = qolMod->getSettingValue<bool>("level/autoclicker");
+                
+                // Toggle den Wert
+                qolMod->setSettingValue("level/autoclicker", !currentVal);
+                
+                // Benachrichtigung anzeigen
+                std::string status = !currentVal ? "Eingeschaltet" : "Ausgeschaltet";
+                Notification::create("Autoclicker: " + status, NotificationIcon::Info)->show();
+            } else {
+                Notification::create("Setting 'level/autoclicker' nicht gefunden!", NotificationIcon::Error)->show();
+            }
         } else {
-            log::error("QoLMod wurde nicht gefunden!");
+            Notification::create("QoLMod nicht installiert!", NotificationIcon::Error)->show();
         }
     }
 };
