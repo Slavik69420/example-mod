@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
 
     steps:
-      - std: checkout@v4
+      - std: actions/checkoutv4
 
       - name: Build Mod
         uses: geode-sdk/build-geode-mod@main
