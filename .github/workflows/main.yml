@@ -22,7 +22,7 @@ jobs:
     runs-on: ${{ matrix.config.os }}
 
     steps:
-      - std: actions/checkoutv4
+      - uses: actions/checkout@v4 # Hier war der Fehler (vorher stand dort std)
 
       - name: Build Mod
         uses: geode-sdk/build-geode-mod@main
