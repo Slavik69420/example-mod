@@ -1,16 +1,16 @@
 {
-    "geode": "v3.0.0",
-    "id": "SlavikStyle_autoclick_button",
-    "version": "v1.0.0",
-    "name": "Autoclick Button",
-    "developer": "SlavikStyle",
-    "description": "Fügt einen Button für den QoL Autoclicker hinzu",
-    "dependencies": [
-        {
-            "id": "thesillydoggo.qolmod",
-            "version": "v1.0.0",
-            "importance": "required"
-        }
-    ],
-    "platforms": ["win", "ios"]
+	"geode": "v3.0.0",
+	"id": Idk.autoclicker_btn",
+	"version": "v1.0.0",
+	"name": "AC Button",
+	"developer": "Name lul",
+	"description": "Toggle QoL Autoclicker",
+	"dependencies": [
+		{
+			"id": "thesillydoggo.qolmod",
+			"version": ">=1.0.0",
+			"importance": "required"
+		}
+	],
+	"platforms": ["win", "ios"]
 }
